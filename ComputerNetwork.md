@@ -285,7 +285,23 @@ PPP协议主要由三部分构成
 尾部
 - FrameCheckSequence：2字节，是使用循环冗余校验算出的的校验位
 - Flag:界定符
+  
+**PPP协议的使用**： 
+
+接收端检测到信号，使用LCP分组配置，成功则建立链路，再交换NCP分组进行配置，进入“打开”状态，可以通信 
+
+**其他**：
 
 PPP帧实现透明传输采用的方法由链路决定（面向字节的异步链路：字节填充；面向比特的同步链路：比特填充） 
 
-PPP帧向上不提供可靠传输服务（出现差错即丢弃）
+PPP帧向上不提供可靠传输服务（出现差错即丢弃） 
+
+### 媒体接入控制（Medium Access Control） 
+
+协调多个发送点与接收站共用同一个传输媒体 
+
+MAC方法：
+- 静态划分信道：信道复用（multiplex），频分复用、时分复用、波分复用、码分复用（CodeDivisionMultiple每个站都分配不同的码片Chip，出1则出码片，出0则出码片反码）
+- 动态接入控制：
+  - 受控接入
+  - 随机接入：总线型局域网CSMA/CD（Carrier Sense Multiple Access/Collision Detection）；无线局域网CSMA/CA（Avoidence）
