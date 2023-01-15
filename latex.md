@@ -13,7 +13,7 @@
   - `includegraphics[参数]{图片文件名}`
   - figure环境及一些操作，例：
 ```
-\begin{figure}
+\begin{figure}[htbp]
 \centering
 \includegraphics[width = 0.5\textwidth]{图片}
 \caption{图片标题}
