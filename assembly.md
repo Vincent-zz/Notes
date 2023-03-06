@@ -171,22 +171,31 @@
 
 ### 通用寄存器 
 
-通用寄存器：AX、BX、CX、DX（可存储一个字，8086中是16位） 
+通用寄存器：AX、BX、CX、DX、BP、SP、SI、DI（可存储一个字，8086中是16位） 
 
 可以当两个独立8位寄存器使用（为了向下兼容），例如AX可以分为AH（high）、AL（low） 
 
 **通用寄存器的特殊用途** 
 
 - A（Accumulator）X
-- B（Base）X
+- B（Base）X，与DS配对使用
 - C（Count）X
 - D（Data）X
 - 双字乘法：AX（低16位） DX（高16位）
 - 双字除法：AX（商） DX（余数）
+- BP基地址指针、SP堆栈指针，与SS配对使用
+- SI源变址、DI目标变址
 
-### 段寄存器、指针寄存器 
+### 控制寄存器 
 
-段寄存器、指令指针寄存器：CS（code）、DS（data）、SS（stack）、ES（extra）；IP（instructor point）、SP（stack point） 
+- 指令指针寄存器IP（Instruction Pointer），与CS配套使用，见后
+- 标志寄存器FLAGS：计算机将数据作为无符号数运算，按有符号数给出标志
+  - 6个状态标志位
+  - 3个控制标志位
+
+### 段寄存器 
+
+段寄存器、指令指针寄存器：CS（code）、DS（data）、SS（stack）、ES（extra） 
 
 CPU访问内存时由段以及指针提供地址  
 
@@ -207,7 +216,7 @@ jmp ax
 
 \* 开机时，CS:IP被初始化 
 
-**DS** 
+**DS（:BX）** 
 
 DS用于存放要访问的数据的段地址，搭配mov指令可以实现对内存中数据的读取和写入： 
 
