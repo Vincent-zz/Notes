@@ -1,9 +1,10 @@
-# Matlab-Notes
-是看郭彦甫老师的视频学习的Matlab，非常感谢郭老师细致的讲解，也很感谢搬运视频的up主 
+# Matlab-Notes 
+
+是看郭彦甫老师的视频学习的Matlab，非常感谢郭老师细致的讲解，也感谢搬运视频的up主 
 
 [视频链接](https://www.bilibili.com/video/BV1GJ41137UH?p=1) 
 
-**常用command**：
+## 常用command
 
 - 定义变量、赋值、给出计算的值（到ans）、给出变量的值（到ans） 
 - `clc` clear命令行窗口 
@@ -12,13 +13,13 @@
 - `whos` 返回变量信息（规模、类型）
 - `format type`更改输出显示（type默认为short，最多保留小数点后4位）；long是最多保留小数点后15位；shortE 与 longE 是相应的科学计数法；`bank`固定显示到小数点后2位；`rat`分数显示
 
-**脚本的执行**： 
+## 脚本的执行 
 
 运行全部：运行/F5 
 
 运行部分：选中右键执行所选内容（就相当于事先写好命令行窗口的每次输入）；运行节 
 
-**杂**： 
+## 杂 
 
 - MATLAB是解释性语言，不编译
 - `%` 注释行的开头；`%% ` 同样是注释，但在这行上方多一条分隔线，将语句分成“节”（section）；选中右键可以方便地注释大片语句
@@ -27,11 +28,11 @@
 - 按`↑``↓`调出命令历史记录
 - 选中语句右键智能缩进
 
-**Debug**： 
+## Debug 
 
 每行语句前加断点，运行进入Debug模式（命令窗口中会出现`K>>`），鼠标放在变量上可以查看值 
 
-**数据类型**： 
+## 数据类型 
 
 - 数字`i = 1`（默认是double，还有single、int8、int16、uint8、uint16、uint32等等），科学计数法比如`1.2e2`
 - 逻辑logical
@@ -41,7 +42,7 @@
 - 元胞数组`A = cell(m, n)` *从1开始*
 - 结构体`A = struct('membername1', value1,'membername2', value2,...)`
 
-**关于variable**： 
+## 关于variable 
 
 - 定义`name = value`
 - multiple定义`[name1, name2,..., valueN] = [value1, value2,..., valueN]`
@@ -51,7 +52,7 @@
 - 变量完整值与类型信息查看可在workplace窗口双击打开
 - 特殊的变量与常量：`ans`；`i`、`j`虚数（单独时可作变量名）；`pi`常量；`Inf`常量-无穷大；`eps`常量-无穷小；`NaN`not a number
 
-**更多关于矩阵**： 
+## 更多关于矩阵** 
 
 - 取用、赋值
   - 取用一个元素：`A(row, column)` 或 `A(n)`n是所有列从左到右从上到下拼成一列中（将矩阵拉成列）的位置，n = (column - 1) * m + row
@@ -81,13 +82,13 @@
   - `max(A)`每列最大数排成一行，但当A只有一行时会输出最大的那个数，所以`max(max(A))`一定表示A中最大的元素；`min(A)`类似；`sum(A)`类似；`mean(A)`类似
 - 与/非：`&`/`|`，矩阵间对应元素（非零为1，零为0）与/非，输出一个logical矩阵 
 
-**更多关于structure** 
+## 更多关于structure 
 
 - 定义
   - `struct('membername1', value1,'membername2', value2,...)`（可以nest structure）
   - `structname.membername = value`，这样也定义了一个struct以及其中一个成员的值 
 
-**更多关于cell array** 
+## 更多关于cell array 
 
 - 定义
   - 理解：structure与cell array类比vector与matrix
@@ -97,13 +98,13 @@
 - 关于cell的函数：
   - 与matrix互相转化：`cellarray = num2cell(matrix)`matrix的每一个num元素成一个cell（不知道意义何在）；`cellarray = mat2cell(matrix, [combinedRowsNum1, combinedRowsNum2, ...], [combinedcolumnsNum1, combinedcolumnsNum2, ...])`
   
-**multidimensional（cell）array** 
+## multidimensional（cell）array 
 
 - 定义
   - `A{row, column, layer} = value`
   - matrix/cell concatenation`cat(dim, A1, A2, A3, ...)`
   
-**逻辑判断**： 
+## 逻辑判断 
 
 `~`非，`~=`不等于，其他同C++ 
 
@@ -111,7 +112,7 @@
 
 矩阵比较，同等规模，每个元素逐一比较，输出logical矩阵 
 
-**语句**： 
+## 语句 
 
 ```
 %% if语句
@@ -147,7 +148,7 @@ end
 ``` 
 循环同样有`break`，`continue`的操作 
 
-**一些常用function**: 
+## 一些杂七杂八的常用function 
 
 （可以在上方 编辑器-插入-函数（fx） 处查询函数） 
 
@@ -166,7 +167,35 @@ end
  toc
 ```
 
-**自定义function**： 
+## 作图常用function 
+
+### plot() 
+
+- `plot(x, y)`，x、y为行向量
+- `plot(y(x))`
+- `plot(y)`，则默认x为正整数
+- `plot(x, y, 'str')`，一个字符串用来设计图形style（点、颜色、线）
+
+后画的图会覆盖新图，如果要保留： 
+
+```
+% 法一：支持同时画
+plot(x, y1, 'str1', x, y2, 'str2', x, y3, 'str3', x, y4, 'str4');
+
+% 法二：使用hold
+hold on
+plot(x, y1);
+plot(x, y2);
+hold off
+``` 
+
+图例（Legend） 
+
+```
+
+```
+
+## 自定义function 
 
 例： 
 
@@ -213,9 +242,9 @@ end
 
 \* 不管是单输出还是多输出，输出的值（只要合理）可以是任何数据类型的值（当然也包括矩阵） 
 
-**函数句柄（function handle）**： 
+## 函数句柄（function handle） 
 
-**文件导入导出** 
+## 文件导入导出 
 
 （1）`save filename.mat`以.mat文件将workspace的内容存在current folder下，用文字工具打开不可阅读内容；`save filename.mat -ascii`用文字工具打开可阅读内容，但变量名会丢失，多变量时会混乱且无法load 
 
@@ -223,4 +252,5 @@ end
 
 （2）从excel导入，例`A = xlsread('filename.xlsx', 'A1:Z4') % 第二项区域可省略`将current folder下filename.xlsx文件的数据导入矩阵A中（且*只导入数字类型*） 
 
-导出到excel，例`xlswrite('filename.xlsx', A, 1, 'A1')`，既可以是已有的excel文件也可以新建一个excel文件，A是一个数字矩阵，也可以是一个字符串的cell例如`xlswrite('filename.xlsx', {'text'}, 1, 'A1')`，1代表导出到sheet1，最后一项为导入起始位置。xlswrite写入将覆盖原值。
+导出到excel，例`xlswrite('filename.xlsx', A, 1, 'A1')`，既可以是已有的excel文件也可以新建一个excel文件，A是一个数字矩阵，也可以是一个字符串的cell例如`xlswrite('filename.xlsx', {'text'}, 1, 'A1')`，1代表导出到sheet1，最后一项为导入起始位置。xlswrite写入将覆盖原值。 
+
