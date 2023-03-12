@@ -197,6 +197,8 @@ hold off
 
 ```
 
+### Scatter() 
+
 ## 自定义function 
 
 例： 
