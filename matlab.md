@@ -59,6 +59,7 @@
   - 取用多个元素：`A([row1, row2, row3...], [column1, column2...])`输出对应子矩阵；`A(matrix)`输出与matrix同等规模的矩阵ans，且ans(i, j) = A(matrix(i, j))
   - 取用一行/列：`A(row, :)`、`A(:, column)`可为左值
   - `A(matrix)`*matrix为与A同等规模的logical矩阵时*，取true位置上的值，常用于左值，示例`str(str == 'x') = 'y' % 将str中的'x'全部替换为'y'`
+  - `find(A)`查找非零元素，可用于轮盘赌：`find(A >= rand)`
 - colon：`a:k:b`输出a开头k为公差的等差数列中不大于b的元素排成的一行（行矩阵）；例如`A = 1:100`（k省略时默认为1）；`A = [1:100;2:2:200;2:3:300]`；甚至还能`A = 'a':2:'y'`
   - colon取用整行/列元素：`A(row, :)`/`A(:, column)`
 - 去掉元素：赋值为`[]`，去掉一个元素只能这样`A(n) = []`且会把原矩阵拉成列；去掉整行/列则用colon取用
