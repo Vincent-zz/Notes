@@ -171,6 +171,23 @@ end
 
 ## 作图常用function 
 
+### figure 
+
+一个作图窗口（figure）由几部分组成
+
+- Figure object，类似于画布
+  - Axes object，坐标轴
+    - Line object，图像
+    - Text object，文字
+    - ...
+
+`figure`开一张新的作图窗口 
+
+```
+set(handle, 'property1', value1, 'property2', value2);
+get(handle, 'property1', value1, 'property2', value2);
+``` 
+
 ### plot() 
 
 - `plot(x, y)`，x、y为行向量
@@ -191,13 +208,25 @@ plot(x, y2);
 hold off
 ``` 
 
-图例（Legend） 
+`subplot` 
+
+### 各种设置 
+
+使用LaTex语法 
 
 ```
-
-```
-
-### Scatter() 
+plot(x, y1, 'str1', x, y2, 'str2', x, y3, 'str3', x, y4, 'str4');
+legend('L1', 'L2', 'L3', 'L4'); % 图例
+title('name of figure'); % 图的标题
+xlabel('xlabel'); % 坐标轴标签
+ylabel('ylabel');
+zlabel('zlabel');
+line(); % 画线
+text(); % 文字标注
+annotation(); % 注释
+xlim([x1, x2]); % 快捷设置坐标轴两端
+ylim([y1, y2]);
+``` 
 
 ## 自定义function 
 
