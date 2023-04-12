@@ -39,3 +39,4 @@
 - 公式
   - `$content$`
   - 单独成段：`equation`环境
+  - [参考](https://blog.csdn.net/NSJim/article/details/109045914)
