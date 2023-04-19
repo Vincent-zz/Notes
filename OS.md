@@ -18,12 +18,24 @@ Operating System: A body of software, in fact, that is responsible for *making i
 
     => 检查RAM、键盘显示器、磁盘 
 
-    => 将磁盘0磁道0扇区（操作系统的引导扇区，512B，bootsect.s）读入0x7C00处 
+    => 将磁盘0磁道0磁头1扇区（操作系统的引导扇区，512B，bootsect.s）读入0x07C00处 
 
     => 设置CS = 0x07C0，IP = 0x0000 
 
-=> 开机程序bootsect执行 
+=> 开机程序bootsect执行（读入系统） 
 
-    => 将7C00处256B的bootsect程序MOV到90000处，腾出空间，并跳转到新的位置继续顺序执行bootsect 
+    => 将0x07C00处512B的bootsect程序MOV到0x90000处，腾出空间（），并跳转到新的位置继续顺序执行bootsect 
 
-    => 
+    => 调用BIOS读磁盘中断，将0磁道0磁头2扇区开始4个扇区（setup）读入内存，接bootsect后面（0x90200）
+
+    => 调用BIOS显示中断，屏幕上显示开机画面
+
+    => 读入system模块（OS代码）
+
+    => 设置CS:IP指向0x90200
+
+=> setup执行（接管计算机） 
+
+    => 调用BIOS中断获取内存大小等硬件参数
+
+    => 将0x90000处开始的所有操作系统程序移动到0x00000处
