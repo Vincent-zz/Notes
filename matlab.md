@@ -277,6 +277,19 @@ end
 
 ## 函数句柄（function handle） 
 
+`f = @(x, y, z) (x.^2 - y.^2 + z);` 
+
+```
+function y = f(x1, x2)
+y = x1.^2 - x2.^2;
+end
+
+i = fmincon('f', ...);
+j = fmincon(@f, ...);
+g = @f;
+h = fmincon(g, ...);
+``` 
+
 ## 文件导入导出 
 
 （1）`save filename.mat`以.mat文件将workspace的内容存在current folder下，用文字工具打开不可阅读内容；`save filename.mat -ascii`用文字工具打开可阅读内容，但变量名会丢失，多变量时会混乱且无法load 
@@ -287,3 +300,8 @@ end
 
 导出到excel，例`xlswrite('filename.xlsx', A, 1, 'A1')`，既可以是已有的excel文件也可以新建一个excel文件，A是一个数字矩阵，也可以是一个字符串的cell例如`xlswrite('filename.xlsx', {'text'}, 1, 'A1')`，1代表导出到sheet1，最后一项为导入起始位置。xlswrite写入将覆盖原值。 
 
+## 数学建模相关 
+
+- 线性规划：`linprog()`
+- 整数规划：`intlinprog()`
+- 非线性规划：`fmincon()`
