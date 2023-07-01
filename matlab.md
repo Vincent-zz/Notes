@@ -305,3 +305,5 @@ h = fmincon(g, ...);
 - 线性规划：`linprog()`
 - 整数规划：`intlinprog()`
 - 非线性规划：`fmincon()`
+- 向量归一化：`A = A / norm(A)`
+- 标准化处理：`zscore()`
