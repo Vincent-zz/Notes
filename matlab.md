@@ -42,6 +42,40 @@
 - 元胞数组`A = cell(m, n)` *从1开始*
 - 结构体`A = struct('membername1', value1,'membername2', value2,...)`
 
+## 符号 
+
+`sym` 
+
+```
+% 符号
+x = sym('a');
+y = x^2 % y也为符号变量
+>>> y = a^2
+
+% 数字
+x = sym('3');
+y = tan(x)
+z = 2x
+>>> y = tan(3)
+z = 6
+
+% 符号矩阵
+x = sym('a', 4);% 4*4方阵 
+y = sym('b', [2, 3]);% 2*3矩阵
+x(2, 3)
+y(2)
+>>> a2_3
+b2_1
+``` 
+
+`syms` 
+
+```
+syms x, y, z;% 多个符号
+syms a [2, 3];% 符号矩阵
+```
+
+
 ## 关于variable 
 
 - 定义`name = value`
@@ -300,10 +334,13 @@ h = fmincon(g, ...);
 
 导出到excel，例`xlswrite('filename.xlsx', A, 1, 'A1')`，既可以是已有的excel文件也可以新建一个excel文件，A是一个数字矩阵，也可以是一个字符串的cell例如`xlswrite('filename.xlsx', {'text'}, 1, 'A1')`，1代表导出到sheet1，最后一项为导入起始位置。xlswrite写入将覆盖原值。 
 
-## 数学建模相关 
+## 数学相关 
 
+- 符号变量求解：`solve([eq1, eq2, eq3], [var1, var2]);`，自变量均为符号变量（等号用`==`表示，默认情况`[eq1 == 0, eq2 == 0, eq3 ==0]`）
 - 线性规划：`linprog()`
 - 整数规划：`intlinprog()`
 - 非线性规划：`fmincon()`
 - 向量归一化：`A = A / norm(A)`
-- 标准化处理：`zscore()`
+- jacobian：
+  - `jacobian(x^2 + 3y + xyz, [x, y, z]);`（行）等价于`(gradient(x^2 + 3y + xyz, [x, y, z]))';`（列）
+  - `jacobian([f1 f2 f3], [x, y, z]);`则将f1、f2、f3对应的三个行向量自上而下排列，由此可以得到f的Hessian矩阵为`jacobian(jacobian(f))`
