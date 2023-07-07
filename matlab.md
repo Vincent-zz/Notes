@@ -336,11 +336,24 @@ h = fmincon(g, ...);
 
 ## 数学相关 
 
-- 符号变量求解：`solve([eq1, eq2, eq3], [var1, var2]);`，自变量均为符号变量（等号用`==`表示，默认情况`[eq1 == 0, eq2 == 0, eq3 ==0]`）
-- 线性规划：`linprog()`
-- 整数规划：`intlinprog()`
-- 非线性规划：`fmincon()`
-- 向量归一化：`A = A / norm(A)`
+- 符号解
+  - 符号变量求解：`[x1, x2] = solve([eq1, eq2, eq3], [var1, var2]);`，均为符号变量（等号用`==`表示，默认情况`[eq1 == 0, eq2 == 0, eq3 ==0]`），`x1`、`x2`为符号向量
+  - 符号计算（替换、代入）：`z = subs(y, {x1, x2, x3}, {value1, value2, value3});`，`x`、`y`、`z`均为符号变量，`value`可为符号变量
+- 数值解
+  - 求解`x0 = fsolve(fun, x0)`，只能求`x0`附近的一个数值解
+  - 函数极小值：`[x, fval] = fminunc(fun, x0)`，`fun`为M函数
+  - 零点：`x0 = roots([a b c d])`（多项式）
 - jacobian：
   - `jacobian(x^2 + 3y + xyz, [x, y, z]);`（行）等价于`(gradient(x^2 + 3y + xyz, [x, y, z]))';`（列）
   - `jacobian([f1 f2 f3], [x, y, z]);`则将f1、f2、f3对应的三个行向量自上而下排列，由此可以得到f的Hessian矩阵为`jacobian(jacobian(f))`
+- 规划
+  - 线性规划：`linprog()`
+  - 整数规划：
+    - `intlinprog()`
+    - 蒙特卡罗法
+  - 非线性规划：
+    - `fmincon()`（慢、精度高）
+    - 罚函数法（快、精度不高）转化为无约束极值问题
+  - 极大极小值：`fminimax()`
+  - 向量归一化：`A = A / norm(A)`
+  - 二次规划（线性约束）：`quadprog()`
