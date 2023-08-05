@@ -369,10 +369,12 @@ h = fmincon(g, ...);
     - ...
 - 插值
   - 分段多项式`pp`，求分段多项式的值：`y = ppval(pp, x);`，其对应的句柄`@(x)(ppval(pp, x))`
-  - 一维插值函数`interp1(x0, y0, x, 'method');`，`x0`递增
-  - 二维插值函数`interp2(x0, y0, z0, x, y, 'method');`，
+  - 一维插值函数`interp1(x0, y0, x, 'method');`（`x0`递增）
+  - 二维插值函数`interp2(x0, y0, z0, x, y, 'method');`（`x0`、`y0`递增）；散乱节点二维插值`zi = griddata(x, y, z, xi, yi);`
   - 三次样条插值
     - `y = interp1(x0, y0, x, 'spline');`（功能简单无法设置边界条件）
     - `y = spline(x0, y0, x);`可多维（`z = spline({x0, y0}, z0, x, y);`），也可返回分段式多项式`pp = spline(x0, y0);`，可使用部分边界条件
     - `pp = csape(x0, y0, conds, valconds);`，可多维，返回分段多项式pp，可以使用各种边界条件
   - 分段三次 Hermite 插值`pchip()`用法类似`spline`，连接平台区更平滑
+- 拟合
+  - 
