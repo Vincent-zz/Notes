@@ -71,6 +71,8 @@ class classname(parentclass):
 - `super().function()`调用父类函数
 - 优先查找子类方法，找不到再在父类中查找
 
+## 文件操作
+
 ## 图形界面
 
 默认GUI开发模块：`tkinter` 
@@ -93,15 +95,37 @@ tkinter.mainloop() #开启事件循环
 
 ## 正则表达式
 
+[菜鸟教程](https://www.runoob.com/regexp/regexp-syntax.html) 
+
 使用`re`模块 
 
 `flag`
 
-- re.l：忽略大小写
+- re.I：忽略大小写
 - re.M：多行模式
+- ...
+- 按位叠加，如`re.I | re.M`
 
 函数
 
-- `pattern = re.compile(string, flag)`，生成正则表达式对象（`RegexObject`）
-- `re.match(pattern, string, flag=0)`，匹配字符与正则表达式
+- `pattern = re.compile(string, flag)`，生成正则表达式对象（`RegexObject`），其中`string`常用原始字符串（形如`r'string'`）来避免转义字符带来的麻烦
+- `re.match(pattern, string, flag=0)`，匹配字符与正则表达式，失败返回`None`，成功返回一个特定的匹配对象
 - `re.search(pattern, string, flag=0)`，查找并返回字符串中与正则表达式的第一处成功匹配
+- `re.split(pattern, string, maxsplit=0, flag=0)`拆分长字符串
+- ...
+
+## 多线程
+
+使用`threading`模块
+
+```python
+import threading
+def thread_func(para1, para2):
+    print 'this is thread function with input' + str(para1) + str(para2)
+t = threading.Thread(target=thread_func, args=('1', 2)) #Thread类
+t.start() #开启线程
+...
+t.join() #线程t回到主程序后再运行后面的代码
+...
+print('the end of the main program')
+```
