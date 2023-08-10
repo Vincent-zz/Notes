@@ -73,6 +73,8 @@ class classname(parentclass):
 
 ## 文件操作
 
+比较简单，[菜鸟教程](https://www.runoob.com/python/file-methods.html)
+
 ## 图形界面
 
 默认GUI开发模块：`tkinter` 
@@ -129,3 +131,26 @@ t.join() #线程t回到主程序后再运行后面的代码
 ...
 print('the end of the main program')
 ```
+
+## 网络编程
+
+模块
+
+- `socket`
+- `urllib`
+- `requests`
+
+例子 
+
+```python
+import requests
+resp = requests.get('https://i0.hdslb.com/bfs/archive/90f39c20bd64341d22023598d7f44491a01c193f.jpg')
+print(resp.status_code) #成功响应状态码：200
+f = open('铁山靠.jpg', 'wb') #打开/创建只写二进制文件
+f.write(resp.content) #content为二进制内容（unicode可用resp.text）
+f.close()
+```
+
+## 浏览器操作
+
+使用`selenium`模块
