@@ -143,6 +143,15 @@ print('the end of the main program')
 例子 
 
 ```python
+from urllib import request
+resp = request.urlopen('http://www.bilibili.com') #返回HTTPResponse类的数据
+content = resp.read()
+print(resp.status) #成功响应状态码：200
+print(resp.headers) #数据头部
+print(content.decode('utf-8')) #read()返回二进制数据（bytes类型），需解码为字符串
+```
+
+```python
 import requests
 resp = requests.get('https://i0.hdslb.com/bfs/archive/90f39c20bd64341d22023598d7f44491a01c193f.jpg')
 print(resp.status_code) #成功响应状态码：200
@@ -154,3 +163,12 @@ f.close()
 ## 浏览器操作
 
 使用`selenium`模块
+
+```python
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+driver = webdriver.Chrome()
+driver.get('http://www.bilibili.com')
+driver.find_element(By.CLASS_NAME, 'nav-search-input').send_keys('只因你太美')
+driver.find_element(By.CLASS_NAME, 'nav-search-btn').click()
+```
