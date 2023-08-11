@@ -136,27 +136,57 @@ print('the end of the main program')
 
 模块
 
-- `socket`
 - `urllib`
 - `requests`
+- `socket`
 
-例子 
+### urllib模块的使用 
+
+基本操作 
 
 ```python
 from urllib import request
-resp = request.urlopen('http://www.bilibili.com') #返回HTTPResponse类的数据
+resp = request.urlopen('http://www.baidu.com') # 返回HTTPResponse类的数据
 content = resp.read()
-print(resp.status) #成功响应状态码：200
-print(resp.headers) #数据头部
-print(content.decode('utf-8')) #read()返回二进制数据（bytes类型），需解码为字符串
-```
+print(resp.status) # 成功响应状态码：200
+print(resp.headers) # 数据头部
+print(content.decode('utf-8')) # read()返回二进制数据（bytes类型），需解码为字符串
+#下载图片1
+ikun = request.urlopen('https://i0.hdslb.com/bfs/archive/90f39c20bd64341d22023598d7f44491a01c193f.jpg')
+f = open('realman.jpg', 'wb')
+f.write(ikun.read())
+f.close()
+#下载图片2
+request.urlretrieve('https://www.somode.com/uploadimg/image/20230129/20230129150835_59024.jpg', 'little_black_spot.jpg')
+``` 
+
+加上UserAgent 
 
 ```python
+from urllib import request
+headers = {
+    'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/538.37 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/538.37 Edg/116.0.1902.200',
+} # 请求头，提供系统与浏览器信息，让对方服务器认为这是用户通过浏览器发起的请求
+requ = request.Request(url='http://www.bilibili.com',headers=headers) # 生成请求类，函数Request(url, data=None, headers={}, ...)
+resp = request.urlopen(requ) # 发送请求，后续操作同上
+content = resp.read()
+print(resp.status)
+print(resp.headers)
+f = open('bilibili.html', 'wb')
+f.write(content)
+f.close()
+``` 
+
+### requests模块的使用
+
+```python
+# requests
+
 import requests
 resp = requests.get('https://i0.hdslb.com/bfs/archive/90f39c20bd64341d22023598d7f44491a01c193f.jpg')
-print(resp.status_code) #成功响应状态码：200
-f = open('铁山靠.jpg', 'wb') #打开/创建只写二进制文件
-f.write(resp.content) #content为二进制内容（unicode可用resp.text）
+print(resp.status_code) # 成功响应状态码：200
+f = open('real_man.jpg', 'wb') # 打开/创建只写二进制文件
+f.write(resp.content) # content为二进制内容（unicode可用resp.text）
 f.close()
 ```
 
