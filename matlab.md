@@ -86,7 +86,7 @@ syms a [2, 3];% 符号矩阵
 - 变量完整值与类型信息查看可在workplace窗口双击打开
 - 特殊的变量与常量：`ans`；`i`、`j`虚数（单独时可作变量名）；`pi`常量；`Inf`常量-无穷大；`eps`常量-无穷小；`NaN`not a number
 
-## 更多关于矩阵** 
+## 更多关于矩阵 
 
 - 取用、赋值
   - 取用一个元素：`A(row, column)` 或 `A(n)`n是所有列从左到右从上到下拼成一列中（将矩阵拉成列）的位置，n = (column - 1) * m + row
@@ -242,7 +242,7 @@ plot(x, y2);
 hold off
 ``` 
 
-`subplot` 
+`subplot(m, n, p)`，图按$m \times n$排列，`p`表示当前子图的位置(从左到右再从上到下顺序)，例如`subplot(2, 2, [3, 4])`表示该子图占第二行整行 
 
 ### 各种设置 
 
@@ -377,4 +377,6 @@ h = fmincon(g, ...);
     - `pp = csape(x0, y0, conds, valconds);`，可多维，返回分段多项式pp，可以使用各种边界条件
   - 分段三次 Hermite 插值`pchip()`用法类似`spline`，连接平台区更平滑
 - 拟合
-  - 
+  - 最小二乘法多项式拟合`a = ployfit(x0, y0, m)`，输出多项式系数向量（高次到低次）
+    - 类似pp，对于多项式有：`y = polyval(a, x)`
+  - 最小二乘优化`lsqlin()`、`lsqcurvefit`、`lsqnonlin`、`lsqnonneg`
