@@ -68,11 +68,12 @@ y(2)
 b2_1
 ``` 
 
-`syms` 
+`syms`（更常用） 
 
 ```
 syms x, y, z;% 多个符号
 syms a [2, 3];% 符号矩阵
+syms f(x), g(x);% 多个符号函数
 ```
 
 
@@ -380,3 +381,24 @@ h = fmincon(g, ...);
   - 最小二乘法多项式拟合`a = ployfit(x0, y0, m)`，输出多项式系数向量（高次到低次）
     - 类似pp，对于多项式有：`y = polyval(a, x)`
   - 最小二乘优化`lsqlin()`、`lsqcurvefit`、`lsqnonlin`、`lsqnonneg`
+- 微分方程
+  - `diff(f, n)`，符号函数f的n阶导数（默认为1）
+  - 求解  
+
+```
+syms f(x), g(x);
+% 常微分方程组通解
+[f1, g1] = dsolve(equ1, equ2);
+[f1, g1] = simplify([f1, g1]);
+% 加上初值&边界条件
+[f2, g2] = dsolve(equ1, equ2, cond1, cond2);
+[f2, g2] = simplify([f2, g2]);
+% 一阶线性常微分方程组解法
+syms x(t), y(t), z(t);
+X = [x; y; z];
+[x, y, z] = dsolve(diff(X) == A * X + B, cond1, cond2);
+% 高阶线性常微分方程组：
+% 换元转化为一阶
+``` 
+
+
