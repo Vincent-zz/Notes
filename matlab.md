@@ -71,9 +71,9 @@ b2_1
 `syms`（更常用） 
 
 ```
-syms x, y, z;% 多个符号
+syms x y z;% 多个符号
 syms a [2, 3];% 符号矩阵
-syms f(x), g(x);% 多个符号函数
+syms f(x) g(x);% 多个符号函数
 ```
 
 
@@ -386,19 +386,52 @@ h = fmincon(g, ...);
   - 求解  
 
 ```
-syms f(x), g(x);
-% 常微分方程组通解
+% 简单的 *常微分方程组* 通解：
+syms f(x) g(x);
 [f1, g1] = dsolve(equ1, equ2);
-[f1, g1] = simplify([f1, g1]);
+f1 = simplify(f1)
+g1 = simplify(g1)
 % 加上初值&边界条件
 [f2, g2] = dsolve(equ1, equ2, cond1, cond2);
-[f2, g2] = simplify([f2, g2]);
-% 一阶线性常微分方程组解法
-syms x(t), y(t), z(t);
+f2 = simplify(f2)
+g2 = simplify(g2)
+
+---
+
+% *一阶线性常微分方程组*：
+syms x(t) y(t) z(t);
 X = [x; y; z];
 [x, y, z] = dsolve(diff(X) == A * X + B, cond1, cond2);
-% 高阶线性常微分方程组：
+
+---
+
+% *一阶常微分方程组* ：
+
+% 初值问题
+% solver为：ode45, ode23, ode113
+% X = [x; y; z];
+% dx/dt = e1; dy/dt = e2; dz/dt = e3，X0为初值
+
+f = @(t, X) [e1; e2; e3];
+[t, X] = solver(f, [t1, t2], X0);
+
+% 边值问题
+% 使用bvpinit与bvp4c
+% X = [x; y; z];
+% dx/dt = e1; dy/dt = e2; dz/dt = e3
+% xinit yinit zinit为初始猜测解
+
+f = @(t, X) [e1; e2; e3];
+bc = @(Xa, Xb)[Xa(1), Xb(1)];
+finit = @(t) [xinit; yinit; zinit];
+init = bvpinit(finit);
+solution = bvp4c(f, bc, init)
+
+---
+
+% *高阶常微分方程组* 
 % 换元转化为一阶
+
 ``` 
 
 
