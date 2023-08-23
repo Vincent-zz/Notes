@@ -381,12 +381,13 @@ h = fmincon(g, ...);
   - 最小二乘法多项式拟合`a = ployfit(x0, y0, m)`，输出多项式系数向量（高次到低次）
     - 类似pp，对于多项式有：`y = polyval(a, x)`
   - 最小二乘优化`lsqlin()`、`lsqcurvefit`、`lsqnonlin`、`lsqnonneg`
+  - 数理统计中的拟合
 - 微分方程
   - `diff(f, n)`，符号函数f的n阶导数（默认为1）
   - 求解  
 
 ```
-% 简单的 *常微分方程组* 通解：
+% 简单的 *常微分方程组* 符号通解：
 syms f(x) g(x);
 [f1, g1] = dsolve(equ1, equ2);
 f1 = simplify(f1)
@@ -398,16 +399,16 @@ g2 = simplify(g2)
 
 ---
 
-% *一阶线性常微分方程组*：
+% *一阶线性常微分方程组* 符号解：
 syms x(t) y(t) z(t);
 X = [x; y; z];
 [x, y, z] = dsolve(diff(X) == A * X + B, cond1, cond2);
 
 ---
 
-% *一阶常微分方程组* ：
+% *一阶常微分方程组*：
 
-% 初值问题
+% 初值问题 *数值解*
 % solver为：ode45, ode23, ode113
 % X = [x; y; z];
 % dx/dt = e1; dy/dt = e2; dz/dt = e3，X0为初值
@@ -415,16 +416,18 @@ X = [x; y; z];
 f = @(t, X) [e1; e2; e3];
 [t, X] = solver(f, [t1, t2], X0);
 
-% 边值问题
+% 边值问题 *数值解*
 % 使用bvpinit与bvp4c
 % X = [x; y; z];
+% Xa为X左边界，Xb为X右边界
 % dx/dt = e1; dy/dt = e2; dz/dt = e3
-% xinit yinit zinit为初始猜测解
+% e4、e5、e6、e7等为边界条件
+% xinit yinit zinit为初始猜测解，bvpinit生成猜测解结构
 
 f = @(t, X) [e1; e2; e3];
-bc = @(Xa, Xb)[Xa(1), Xb(1)];
+bc = @(Xa, Xb)[e4; e5; e6; e7];
 finit = @(t) [xinit; yinit; zinit];
-init = bvpinit(finit);
+init = bvpinit(linspace(), finit);
 solution = bvp4c(f, bc, init)
 
 ---
@@ -434,4 +437,8 @@ solution = bvp4c(f, bc, init)
 
 ``` 
 
-
+- 数理统计
+  - 基本统计量
+    - `mean(X)`
+    - `std(X)`标准差；`std(X, 1)方差`
+    - 
