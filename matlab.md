@@ -441,4 +441,28 @@ solution = bvp4c(f, bc, init)
   - 基本统计量
     - `mean(X)`
     - `std(X)`标准差；`std(X, 1)方差`
-    - 
+  - 概率密度函数（`pdf`）
+    - `y = normpdf(x, mu, sigma)`，正态分布
+    - `y = gampdf(x, a, b)`，伽马分布
+    - `y = chi2pdf(x, nu)`，卡方分布
+    - `y = tpdf(x, nu)`
+    - ...
+  - 对应反函数
+    - `x = norminv(y, mu, sigma)`
+    - `x = gaminv(y, a, b)`
+    - `x = chi2inv(y, nu)`
+    - `x = tinv(y, nu)`
+    - ...
+  - 分布对象`pd = makedist()`
+    - 正态分布`pd = makedist('Normal', 'mu', mu, 'sigma', sigma)`（不填参数默认为标准正态分布）
+    - 伽马分布`pd = makedist('Gamma', 'a', a, 'b', b)`（默认a、b为1）
+    - ...
+  - 概率分布函数`y = cdf(pd, x)`
+  - 最大似然估计&区间估计
+    - `[p_hat, p_ci] = binofit(X, n, alpha)`，二项分布
+    - `[lambda_hat, lambda_ci] = poissfit(X, alpha)`，泊松分布
+    - `[mu_hat, mu_ci] = expfit(X, alpha)`
+    - `[mu_hat, sigma_hat, mu_ci, sigma_ci] = normfit(X, alpha)`，正态分布
+    - `[p_hat, p_ci] = gamfit(X, alpha)`，伽马分布。p_hat为矩阵[a_hat b_hat]；p_ci为矩阵[a_l b_l; a_h b_h]
+    - ...
+  - 假设检验
