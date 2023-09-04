@@ -474,3 +474,9 @@ solution = bvp4c(f, bc, init)
       - $\sigma$未知检验$\mu$，`h = ttest2(X, Y, ,'Alpha' alpha)`
       - $\mu$未知检验$\sigma^2$，`h = vartest2(X, Y, ,'Alpha' alpha)`
   - Q-Q图检验拟合（参数估计）效果：`qqplot(X, pd)`，$45\degree$直线表明拟合效果好
+- 多元分析
+  - Q型聚类分析（分类样本）
+  - R型聚类分析（分类指标）
+    - `y = pdist(X, 'metric')`，`X`为$m \times n$矩阵（m个对象、n维行向量表示），得到行向量形式的距离；`yc = squareform(y)`方阵形式的距离
+    - `z = linkage(y, 'method')`由行向量形式的距离生成聚类树（一个包含树信息的矩阵）
+    - `dendrogram(z)`画出聚类图
