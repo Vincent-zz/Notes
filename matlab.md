@@ -466,3 +466,11 @@ solution = bvp4c(f, bc, init)
     - `[p_hat, p_ci] = gamfit(X, alpha)`，伽马分布。p_hat为矩阵[a_hat b_hat]；p_ci为矩阵[a_l b_l; a_h b_h]
     - ...
   - 假设检验
+    - 正态分布
+      - $\sigma$未知检验$\mu$，`h = ttest(X, mu, 'Alpha', alpha)`（h为1表示均值为$\mu$）
+      - $\sigma$已知检验$\mu$，`h = ztest(X, mu, sigma, 'Alpha', alpha)`
+      - $\mu$未知检验$\sigma^2$，`h = vartest(X, varience, 'Alpha', alpha)`
+    - 两个正态分布
+      - $\sigma$未知检验$\mu$，`h = ttest2(X, Y, ,'Alpha' alpha)`
+      - $\mu$未知检验$\sigma^2$，`h = vartest2(X, Y, ,'Alpha' alpha)`
+  - Q-Q图检验拟合（参数估计）效果：`qqplot(X, pd)`，$45\degree$直线表明拟合效果好
