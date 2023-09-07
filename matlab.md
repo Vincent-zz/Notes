@@ -358,6 +358,7 @@ h = fmincon(g, ...);
   - 极大极小值：`fminimax()`
   - 向量归一化：`A = A / norm(A)`
   - 二次规划（线性约束）：`quadprog()`
+  - 多目标规划（运筹学）：`fgoalattain()`
 - 图论
   - 生成图对象：`graph`无向图`digraph`有向图
     - 邻接矩阵`G = graph(A);`，空间浪费
@@ -475,8 +476,17 @@ solution = bvp4c(f, bc, init)
       - $\mu$未知检验$\sigma^2$，`h = vartest2(X, Y, ,'Alpha' alpha)`
   - Q-Q图检验拟合（参数估计）效果：`qqplot(X, pd)`，$45\degree$直线表明拟合效果好
 - 多元分析
+  - `zscore(X)`，标准化数据（$\mu = 0$、$\sigma^2 = 1$）
   - Q型聚类分析（分类样本）
-  - R型聚类分析（分类指标）
     - `y = pdist(X, 'metric')`，`X`为$m \times n$矩阵（m个对象、n维行向量表示），得到行向量形式的距离；`yc = squareform(y)`方阵形式的距离
     - `z = linkage(y, 'method')`由行向量形式的距离生成聚类树（一个包含树信息的矩阵）
     - `dendrogram(z)`画出聚类图
+  - R型聚类分析（分类指标）
+    - `corrcoef(X)`相关系数矩阵
+  - 主成分分析
+    - 主成分：使得方差最大的几组权重向量
+  - 方差分析
+    - 定类（X）对定量（Y）
+    - 各类总体均呈正态分布；各类中取出的样本组方差相同
+    - `anova1()` `anova2`
+  - 回归分析
