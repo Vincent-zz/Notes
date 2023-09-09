@@ -95,6 +95,7 @@ syms f(x) g(x);% 多个符号函数
   - 取用一行/列：`A(row, :)`、`A(:, column)`可为左值
   - `A(matrix)`*matrix为与A同等规模的logical矩阵时*，取true位置上的值，常用于左值，示例`str(str == 'x') = 'y' % 将str中的'x'全部替换为'y'`
   - `find(A)`查找非零元素，输出一个向量，可用于轮盘赌：`find(A >= rand)`
+  - 逻辑索引：`a(a > 999) = -1;`
 - colon：`a:k:b`输出a开头k为公差的等差数列中不大于b的元素排成的一行（行矩阵）；例如`A = 1:100`（k省略时默认为1）；`A = [1:100;2:2:200;2:3:300]`；甚至还能`A = 'a':2:'y'`
   - colon取用整行/列元素：`A(row, :)`/`A(:, column)`
 - 去掉元素：赋值为`[]`，去掉一个元素只能这样`A(n) = []`且会把原矩阵拉成列；去掉整行/列则用colon取用
@@ -203,10 +204,11 @@ end
  statement
  toc
 ```
+- `norm(x)`向量的模（2范数）
 
 ## 作图常用function 
 
-### figure 
+### `figure` 
 
 一个作图窗口（figure）由几部分组成
 
@@ -223,7 +225,7 @@ set(handle, 'property1', value1, 'property2', value2);
 get(handle, 'property1', value1, 'property2', value2);
 ``` 
 
-### plot() 
+### `plot()` 
 
 - `plot(x, y)`，x、y为行向量
 - `plot(y(x))`
@@ -244,6 +246,12 @@ hold off
 ``` 
 
 `subplot(m, n, p)`，图按$m \times n$排列，`p`表示当前子图的位置(从左到右再从上到下顺序)，例如`subplot(2, 2, [3, 4])`表示该子图占第二行整行 
+
+### `mesh()`空间网格图 
+
+`mesh(x, y, data);`，x、y为n、m维行向量，data为$m \times n$矩阵（左上角原点，右x下y） 
+
+x、y网格：`[x_mesh y_mesh] = meshgrid(x, y);`，用于生成data，`z = f(x_mesh, y_mesh);` 
 
 ### 各种设置 
 
