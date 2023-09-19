@@ -77,10 +77,10 @@ end;
 
 ```VHDL
 architecture [archi_name] of entity_name is
-    [declarations]
-    begin
-        --code
-    end;
+  [declarations]
+  begin
+      --code
+  end;
 ```
 
 ## Data object
@@ -90,20 +90,20 @@ architecture [archi_name] of entity_name is
   - `variable`：在**顺序代码**中表示一些局部信息，**即时更新**，**不是实际电路连接**
 - static
   - `constant`：常数
-  - `generic`：类属，用于说明的静态信息
+  - `generic`：类属，用于说明实例结构参数的静态信息
 
 ```VHDL
-signal name : data_type [ := initial_value];
+signal name : data_type [ := default_value];
 --signal赋初值是不可综合的，仅用于仿真
 
-variable name : data_type [ := initial_value];
+variable name : data_type [ := default_value];
 
 constant name : data_type := value;
 
 generic
 (
-    name1 : data_type1 [ := initial_value1];
-    name2 : data_type2 [ := initial_value2];
+    name1 : data_type1 [ := default_value1];
+    name2 : data_type2 [ := default_value2];
 );
 
 ```
@@ -154,6 +154,70 @@ end;
   - 数值类属性
     - `s'length`
     - `s'range`
+
+## Define your own package
+
+元件
+
+```VHDL
+--component.vhd
+library ieee;
+use ieee.std_logic_1164.all;
+--------------------------------
+entity comp_name is 
+  generic(...);
+  port(...);
+end component;
+--------------------------------
+architecture of comp_name is
+  begin
+    ...
+  end;
+```
+
+包
+
+```VHDL
+--my_package.vhd
+library ieee;
+use ieee.std_logic_1164.all;
+--------------------------------
+package package_name is
+
+  component comp_name is 
+    generic(...);
+    port(...);
+  end component;
+
+end package_name;
+--------------------------------
+package body package_name is
+
+  -- procedures and functions
+
+end package_name;
+```
+
+包中元件的使用
+
+```VHDL
+--project.vhd
+library ieee;
+use ieee.std_logic_1164.all;
+
+library work;
+use work.my_package.all;
+-------------------------------
+entity my_project is
+  generic(...);
+  port(...);
+end;
+
+architecture of my_project is
+  begin
+    label: comp_name generic map(...) port map(...);
+  end;
+```
 
 ## Concurrent Statements
 
