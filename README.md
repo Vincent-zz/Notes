@@ -1,11 +1,17 @@
-# OtherNotes
- 
-various notes contained: 
+# Notes
 
-[汇编](assembly.md) 
+various notes contained:
 
-[计算机网络](ComputerNetwork.md) 
+[汇编](assembly.md)
 
-[MATLAB](matlab.md) 
+[计算机网络](ComputerNetwork.md)
+
+[MATLAB](matlab.md)
 
 [LaTeX](latex.md)
+
+[VHDL](VHDL.md)
+
+[python](python.md)
+
+[powershell](powershell.md)
