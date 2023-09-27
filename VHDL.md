@@ -66,7 +66,7 @@ entity entity_name is
 end;
 ```
 
-信号模式
+端口模式
 
 - `in`：输入，右值
 - `out`：输出，左值
@@ -90,7 +90,7 @@ architecture [archi_name] of entity_name is
   - `variable`：在**顺序代码**中表示一些局部信息，**即时更新**，**不是实际电路连接**
 - static
   - `constant`：常数
-  - `generic`：类属，用于说明实例结构参数的静态信息
+  - `generic`：类属，用于说明entity结构参数的静态信息
 
 ```VHDL
 signal name : data_type [ := default_value];
@@ -107,6 +107,16 @@ generic
 );
 
 ```
+
+## Attribute
+
+- 信号对象`s`的属性
+  - 信号类属性
+    - `s'event`：`s`变化返回true（可综合）
+    - `s'stable`：`s`稳定无变化返回true（可综合）
+  - 数值类属性
+    - `s'length`
+    - `s'range`
 
 ## Data type
 
@@ -145,16 +155,6 @@ end;
   - `x <= '1'; y <= x & "1010";`
   - `y <= ('1', '1', '0', '1', '0');`
 
-## Attribute
-
-- 信号对象`s`的属性
-  - 信号类属性
-    - `s'event`：`s`变化返回true（可综合）
-    - `s'stable`：`s`稳定无变化返回true（可综合）
-  - 数值类属性
-    - `s'length`
-    - `s'range`
-
 ## Define your own package
 
 元件
@@ -165,7 +165,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 --------------------------------
 entity comp_name is 
-  generic(...);
+  generic(...);-- 有generic时无法直接实例化（综合）这个元件
   port(...);
 end component;
 --------------------------------
@@ -219,6 +219,50 @@ architecture of my_project is
   end;
 ```
 
+- 端口映射
+  - 位置映射`port map(x, y)`
+  - 名称映射`port map(x => a, y => b)`
+- 类属映射
+  - `generic map(para.list)`
+
 ## Concurrent Statements
 
+```VHDL
+-- 1. when-else
+F <= A when flag1 else
+     B when flag2 else
+     C;
+-- 2. with-select
+with flag select
+  F <= A when valueA, 
+       B when valueB,
+       C when others;
+-- 3. use package component
+-- 4. after（无法综合，仅用于仿真）
+F <= F0, F1 after 10ns, F2 after 20ns;-- 时延都是相对仿真开始时间而言的
+CLK <= not CLK after 10ns;
+-- 5. transport after
+```
+
 ## Sequential Statements
+
+进程
+
+```VHDL
+-- 定义
+-- 写在architecture中
+-- process内部顺序执行，但一个archi中的多个process之间还是并行的
+[label: ] process (sensitivity list) is
+[variable declarations]
+begin
+  ...
+end process;
+-- variable即刻赋值
+-- sensi-list中的信号在process结束后赋值
+```
+
+进程内部的顺序语句
+
+```VHDL
+
+```
