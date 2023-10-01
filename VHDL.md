@@ -258,15 +258,15 @@ CLK <= not CLK after 10ns;
 进程
 
 - process内部顺序执行，但一个archi中的多个process之间还是并行的
-- variable即刻赋值
-- 敏感表中为该进程电路的（非锁存）输入信号
-- 未出现在敏感表中但出现在进程中的输入信号，仅在敏感表中信号变化时采样，对应实际电路中的锁存器
-- 进程中的信号赋值并不是实际连线，输出信号的值在最后确定
+- variable非实际电路，即刻赋值，仅仅起辅助作用
+- 敏感表中为该process电路的（非锁存）输入信号
+- 未出现在敏感表中但出现在process中的输入信号，仅在敏感表中信号变化时采样，对应实际电路中的锁存器
+- process中的信号赋值并不是实际连线，输出信号的值在最后确定
 
 ```VHDL
 -- 定义
 -- 写在architecture中
-[label: ] process (sensitivity list) is
+[label: ] process (sensitivity table) is
 [variable declarations]
 begin
   ...
