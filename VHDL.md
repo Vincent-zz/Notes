@@ -56,7 +56,7 @@ use work.all;
 ## Entity
 
 ```VHDL
-entity entity_name is
+entity <entity_name> is
     [declarations]
     port
     (   
@@ -77,7 +77,7 @@ end;
 ## Architecture
 
 ```VHDL
-architecture [archi_name] of entity_name is
+architecture <archi_name> of entity_name is
   [declarations]
   begin
       --code
@@ -129,6 +129,7 @@ generic
 
 - `bit`与`bit_vector`：来自std库的standard包，只能进行逻辑运算
 - `std_logic`与`std_logic_vector`：来自ieee库的std_logic_1164包，有8种取值（其中仅`'1'`、`'0'`、`'Z'`可综合）
+  - 用`falling_edge(s)`、`rising_edge(s)`来特指下降沿、上升沿
 
 ```VHDL
 entity data_type_example is
@@ -259,14 +260,19 @@ CLK <= not CLK after 10ns;
 
 - process内部顺序执行，但一个archi中的多个process之间还是并行的
 - variable非实际电路，即刻赋值，仅仅起辅助作用
-- 敏感表中为该process电路的（非锁存）输入信号
-- 未出现在敏感表中但出现在process中的输入信号，仅在敏感表中信号变化时采样，对应实际电路中的锁存器
-- process中的信号赋值并不是实际连线，输出信号的值在最后确定
+- signals in process
+  - 敏感表中为该process电路的（非锁存）输入信号
+  - 未出现在敏感表中但出现在process中的输入信号，仅在敏感表中信号变化时采样，对应实际电路中的锁存器
+  - 输出信号在process最后统一赋值
+  - 常见错误
+    - 某信号作为输出同时也作输入，在process中的计算都只取用输入值，它仅在process最后才会得到新的赋值（电路会因此陷入unstable loop，即进程反复执行）
+    - 一个输出信号有多个赋值语句，以最后的为准（这种信号多次赋值的写法没有意义）
+- 绝大多数综合器不支持单个process中存在多个时钟，也不支持时钟触发的if语句带有else
 
 ```VHDL
 -- 定义
 -- 写在architecture中
-[label: ] process (sensitivity table) is
+[label: ] process (<sensitivity table>) is
 [variable declarations]
 begin
   ...
@@ -276,5 +282,36 @@ end process;
 进程内部的顺序语句
 
 ```VHDL
--- *一个进程内部仅能有一个时钟信号
+-- 1. wait
+-- *碰到wait时会对之前的信号赋值，而不是最后统一赋值
+wait on <signal table>; -- 信号发生变化才继续
+wait until <condition>; -- 某条件发生才继续（*condition必须要发生变化，即使一开始就满足条件仍会阻塞*）
+wait for <time>; -- 延时，只能仿真不可综合
+wait on <signal table> until <condition> for <time>; -- 当信号改变之后，某条件发生则继续；time为最长挂起时间
+-- 2. if
+-- 优先级电路
+if <condition> then
+  [statement]
+elsif <condition> then
+  [statement]
+else <condition> then
+  [statement]
+end if;
+-- 3. case-when
+case <expression> is
+  when <value> => [statement]
+  when <value> => [statement]
+  when others => [statement]
+end case;
+-- 4. loop
+loop
+  [statement]
+end loop;
+-- while-loop
+while <condition> loop
+  [statement]
+end loop;
+-- exit/next
+exit [when <condition>];
+next [when <condition>];
 ```
