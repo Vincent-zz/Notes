@@ -4,6 +4,7 @@
 
 - 不区分大小写
 - `--`注释
+- 层级关系：库>包>实体>结构>顺序代码块
 - 单值信号`''`；多值信号`""`
 
 ## Framework
@@ -86,11 +87,15 @@ architecture [archi_name] of entity_name is
 ## Data object
 
 - non-static
-  - `signal`：表示电路内部连接（一根导线），在顺序代码中时非及时更新（结束后更新）；实体所有端口默认为信号
-  - `variable`：在**顺序代码**中表示一些局部信息，**即时更新**，**不是实际电路连接**
+  - `signal`：表示电路内部连接（一根导线）；实体所有端口默认为信号
+    - 定义在实体、实体端口、结构首部，向下全局
+  - `variable`：在**顺序代码块**中表示一些局部信息，**即时更新**，**不是实际电路连接**
+    - 仅在process、function、proccedure中定义
 - static
   - `constant`：常数
+    - 包、实体、结构中皆可定义，向下全局
   - `generic`：类属，用于说明entity结构参数的静态信息
+    - 定义在实体中，可在其结构中使用
 
 ```VHDL
 signal name : data_type [ := default_value];
@@ -246,23 +251,30 @@ CLK <= not CLK after 10ns;
 
 ## Sequential Statements
 
+- 顺序语句常用于描述时序逻辑电路，非必要不写顺序语句
+- HDL的目的是描述电路，并无所谓“执行”的说法，与编程语言有本质不同。
+- 顺序语句综合较为复杂，必须清楚所需电路结构否则容易出错
+
 进程
+
+- process内部顺序执行，但一个archi中的多个process之间还是并行的
+- variable即刻赋值
+- 敏感表中为该进程电路的（非锁存）输入信号
+- 未出现在敏感表中但出现在进程中的输入信号，仅在敏感表中信号变化时采样，对应实际电路中的锁存器
+- 进程中的信号赋值并不是实际连线，输出信号的值在最后确定
 
 ```VHDL
 -- 定义
 -- 写在architecture中
--- process内部顺序执行，但一个archi中的多个process之间还是并行的
 [label: ] process (sensitivity list) is
 [variable declarations]
 begin
   ...
 end process;
--- variable即刻赋值
--- sensi-list中的信号在process结束后赋值
 ```
 
 进程内部的顺序语句
 
 ```VHDL
-
+-- *一个进程内部仅能有一个时钟信号
 ```
