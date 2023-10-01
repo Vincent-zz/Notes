@@ -259,7 +259,7 @@ CLK <= not CLK after 10ns;
 进程
 
 - process内部顺序执行，但一个archi中的多个process之间还是并行的
-- variable非实际电路，即刻赋值，仅仅起辅助作用
+- variable非实际电路，即刻赋值，仅仅起辅助作用（对变量赋的初值只会在开始执行一次）
 - signals in process
   - 敏感表中为该process电路的（非锁存）输入信号
   - 未出现在敏感表中但出现在process中的输入信号，仅在敏感表中信号变化时采样，对应实际电路中的锁存器
