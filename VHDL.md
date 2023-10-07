@@ -311,7 +311,29 @@ end loop;
 while <condition> loop
   [statement]
 end loop;
+-- for-loop
+for <variable> in <range> loop
+  [statement]
+end loop;
 -- exit/next
 exit [when <condition>];
 next [when <condition>];
 ```
+
+## FPGA
+
+Field Programmable Gate Array -- a reconfigurable semiconductor integrated circuit
+
+内部组成
+
+- Configurable Logic Blocks (the fundamental piece)
+  - Look Up Table：储存器，储存“真值表”，修改“真值表”即等效于设置组合逻辑
+  - Flip-Flop：实现时序逻辑
+- Interconnects：导线
+- IO Blocks
+- ...
+
+## By-Talk about EDA
+
+- 时序逻辑 = 组合逻辑 + D触发器 + CLK
+- “数电的尽头是模电”
