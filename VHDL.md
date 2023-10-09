@@ -80,14 +80,14 @@ end;
 architecture <archi_name> of entity_name is
   [declarations]
   begin
-      --code
+      <statement>
   end;
 ```
 
 ## Data object
 
 - non-static
-  - `signal`：表示电路内部连接（一根导线）；实体所有端口默认为信号
+  - `signal`：表示电路内部连接；实体所有端口默认为信号
     - 定义在实体、实体端口、结构首部，向下全局
   - `variable`：在**顺序代码块**中表示一些局部信息，**即时更新**，**不是实际电路连接**
     - 仅在process、function、proccedure中定义
@@ -113,7 +113,7 @@ generic
 
 ```
 
-## Attribute
+### Attribute
 
 - 信号对象`s`的属性
   - 信号类属性
@@ -127,9 +127,10 @@ generic
 
 常用类型
 
-- `bit`与`bit_vector`：来自std库的standard包，只能进行逻辑运算
-- `std_logic`与`std_logic_vector`：来自ieee库的std_logic_1164包，有8种取值（其中仅`'1'`、`'0'`、`'Z'`可综合）
-  - 用`falling_edge(s)`、`rising_edge(s)`来特指下降沿、上升沿
+- enumeration
+  - `bit`与`bit_vector`：来自std库的standard包，只能进行逻辑运算
+  - `std_logic`与`std_logic_vector`：来自ieee库的std_logic_1164包，有8种取值（其中仅`'1'`、`'0'`、`'Z'`可综合）
+    - 用`falling_edge(s)`、`rising_edge(s)`来特指下降沿、上升沿
 
 ```VHDL
 entity data_type_example is
@@ -145,6 +146,10 @@ entity data_type_example is
 end;
 ```
 
+- physical
+  - time：`fs`的整数倍
+- 自定义
+
 ## Operator
 
 - 赋值
@@ -153,6 +158,7 @@ end;
 - 逻辑运算
   - `not`优先级最高
   - `and`、`or`、`nand`、`nor`、`xor`并列
+  - `=`、`/=`
 - 算术运算
   - `+`、`-`、`*`、`/`、`**`、`abs`、`mod`（右值返回）、`rem`（左值返回）
 - 移位
@@ -161,7 +167,7 @@ end;
   - `x <= '1'; y <= x & "1010";`
   - `y <= ('1', '1', '0', '1', '0');`
 
-## Define your own package
+## Define your own packages
 
 元件
 
@@ -177,7 +183,7 @@ end component;
 --------------------------------
 architecture of comp_name is
   begin
-    ...
+    <statement>
   end;
 ```
 
@@ -190,10 +196,14 @@ use ieee.std_logic_1164.all;
 --------------------------------
 package package_name is
 
+  -- component
   component comp_name is 
     generic(...);
     port(...);
   end component;
+  -- function
+
+  -- procedure
 
 end package_name;
 --------------------------------
@@ -258,15 +268,13 @@ CLK <= not CLK after 10ns;
 
 进程
 
-- process内部顺序执行，但一个archi中的多个process之间还是并行的
 - variable非实际电路，即刻赋值，仅仅起辅助作用（对变量赋的初值只会在开始执行一次）
 - signals in process
   - 敏感表中为该process电路的（非锁存）输入信号
   - 未出现在敏感表中但出现在process中的输入信号，仅在敏感表中信号变化时采样，对应实际电路中的锁存器
   - 输出信号在process最后统一赋值
-  - 常见错误
-    - 某信号作为输出同时也作输入，在process中的计算都只取用输入值，它仅在process最后才会得到新的赋值（电路会因此陷入unstable loop，即进程反复执行）
-    - 一个输出信号有多个赋值语句，以最后的为准（这种信号多次赋值的写法没有意义）
+  - 某信号作为输出同时也作输入，在process中的计算都只取用输入值，它仅在process最后才会得到新的赋值（当该信号位于敏感表中时，电路会因此陷入unstable loop，即进程反复执行导致出错）
+  - 一个输出信号有多个赋值语句，以最后的为准（这种信号多次赋值的写法没有意义）
 - 绝大多数综合器不支持单个process中存在多个时钟，也不支持时钟触发的if语句带有else
 
 ```VHDL
@@ -291,33 +299,76 @@ wait on <signal table> until <condition> for <time>; -- 当信号改变之后，
 -- 2. if
 -- 优先级电路
 if <condition> then
-  [statement]
+  <statement>
 elsif <condition> then
-  [statement]
+  <statement>
 else <condition> then
-  [statement]
+  <statement>
 end if;
 -- 3. case-when
 case <expression> is
-  when <value> => [statement]
-  when <value> => [statement]
-  when others => [statement]
+  when <value> => <statement>
+  when <value> => <statement>
+  when others => <statement>
 end case;
 -- 4. loop
 loop
-  [statement]
+  <statement>
 end loop;
 -- while-loop
 while <condition> loop
-  [statement]
+  <statement>
 end loop;
 -- for-loop
 for <variable> in <range> loop
-  [statement]
+  <statement>
 end loop;
 -- exit/next
 exit [when <condition>];
 next [when <condition>];
+```
+
+## FSM
+
+```VHDL
+entity FSM is
+  port(
+    clk : in std_logic; 
+    reset : in std_logic; 
+    data_in : in std_logic; 
+    data_out : out std_logic
+  );
+end;
+
+architecture of FSM is
+  type state_type is (s0, s1, s2, s3);
+  signal state : state_type;
+begin
+  -- switching state
+  process(clk, reset)
+  begin
+    if reset = '1' then
+      state <= s0;
+    elsif rising_edge(clk) then
+      case state is
+        when s0 => <switching statement>
+        when s1 => <switching statement>
+        when s2 => <switching statement>
+        when s3 => <switching statement> 
+      end case;
+    end if;
+  end process;
+  -- archi of each state
+  process(state)
+  begin
+    case state is
+        when s0 => <statement>
+        when s1 => <statement>
+        when s2 => <statement>
+        when s3 => <statement> 
+      end case;
+  end process;
+end;
 ```
 
 ## FPGA
