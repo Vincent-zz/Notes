@@ -5,7 +5,6 @@
 - 不区分大小写
 - `--`注释
 - 层级关系：库>包>实体>结构>顺序代码块
-- 单值信号`''`；多值信号`""`
 
 ## Framework
 
@@ -87,7 +86,7 @@ architecture <archi_name> of entity_name is
 ## Data object
 
 - non-static
-  - `signal`：表示电路内部连接；实体所有端口默认为信号
+  - `signal`：表示电路内部连接
     - 定义在实体、实体端口、结构首部，向下全局
   - `variable`：在**顺序代码块**中表示一些局部信息，**即时更新**，**不是实际电路连接**
     - 仅在process、function、proccedure中定义
@@ -125,12 +124,17 @@ generic
 
 ## Data type
 
-常用类型
+### 常用类型
 
-- enumeration
-  - `bit`与`bit_vector`：来自std库的standard包，只能进行逻辑运算
+- Numeric type
+  - `integer`：来自std库的standard包，32位
+  - `real`：来自standard，必须明确写出小数点，**不可综合**
+- Enumerated type
+  - `boolean`：来自standard，包含`false`、`true`，只支持逻辑运算
+  - `bit`与`bit_vector`：来自standard，只支持逻辑运算
   - `std_logic`与`std_logic_vector`：来自ieee库的std_logic_1164包，有8种取值（其中仅`'1'`、`'0'`、`'Z'`可综合）
-    - 用`falling_edge(s)`、`rising_edge(s)`来特指下降沿、上升沿
+    - 使用`falling_edge(s)`、`rising_edge(s)`来特指下降沿、上升沿
+  - `signed`与`unsigned`：来自ieee库，形式类似`std_logic_vector`，但只支持算术运算，不支持逻辑运算
 
 ```VHDL
 entity data_type_example is
@@ -146,9 +150,44 @@ entity data_type_example is
 end;
 ```
 
-- physical
-  - time：`fs`的整数倍
-- 自定义
+- Physical
+  - **不可综合**
+  - `time`：`fs`的整数倍
+- Array
+
+```VHDL
+type array_name is array(<array range>) of <type>;
+-- examples
+type bit_8 is array(7 downto 0) of bit;
+type bit_4_8 is array(0 to 3) of bit_8;
+type bit_4_8_ is array(0 to 3, 7 downto 0) of bit;
+constant bit_table : bit_4_8 :=
+(
+  ('1', '0', '1', '1', '0', '1', '0', '0'), 
+  ('1', '0', '1', '1', '0', '1', '0', '0'), 
+  ('1', '1', '1', '0', '0', '1', '0', '1'), 
+  ('0', '0', '1', '1', '1', '1', '0', '1')
+); 
+```
+
+- User Defined
+
+### 子类型
+
+```VHDL
+-- definition
+subtype type_name is orign_type range <range>;
+--------------------------------------------------
+signal a : origin_type;
+signal b : type_name;
+a <= b;-- right
+b <= a;-- wrong
+```
+
+\* P.S. `<range>`
+
+- Numeric：`<lb> to <ub>`
+- Enumerated：`(ele1, ele2, ...)`
 
 ## Operator
 
@@ -158,7 +197,8 @@ end;
 - 逻辑运算
   - `not`优先级最高
   - `and`、`or`、`nand`、`nor`、`xor`并列
-  - `=`、`/=`
+  - 等于`=`、不等于`/=`
+  - `&`连接
 - 算术运算
   - `+`、`-`、`*`、`/`、`**`、`abs`、`mod`（右值返回）、`rem`（左值返回）
 - 移位
@@ -166,80 +206,6 @@ end;
 - 拼接
   - `x <= '1'; y <= x & "1010";`
   - `y <= ('1', '1', '0', '1', '0');`
-
-## Define your own packages
-
-元件
-
-```VHDL
---component.vhd
-library ieee;
-use ieee.std_logic_1164.all;
---------------------------------
-entity comp_name is 
-  generic(...);-- 有generic时无法直接实例化（综合）这个元件
-  port(...);
-end component;
---------------------------------
-architecture of comp_name is
-  begin
-    <statement>
-  end;
-```
-
-包
-
-```VHDL
---my_package.vhd
-library ieee;
-use ieee.std_logic_1164.all;
---------------------------------
-package package_name is
-
-  -- component
-  component comp_name is 
-    generic(...);
-    port(...);
-  end component;
-  -- function
-
-  -- procedure
-
-end package_name;
---------------------------------
-package body package_name is
-
-  -- procedures and functions
-
-end package_name;
-```
-
-包中元件的使用
-
-```VHDL
---project.vhd
-library ieee;
-use ieee.std_logic_1164.all;
-
-library work;
-use work.my_package.all;
--------------------------------
-entity my_project is
-  generic(...);
-  port(...);
-end;
-
-architecture of my_project is
-  begin
-    label: comp_name generic map(...) port map(...);
-  end;
-```
-
-- 端口映射
-  - 位置映射`port map(x, y)`
-  - 名称映射`port map(x => a, y => b)`
-- 类属映射
-  - `generic map(para.list)`
 
 ## Concurrent Statements
 
@@ -266,7 +232,7 @@ CLK <= not CLK after 10ns;
 - HDL的目的是描述电路，并无所谓“执行”的说法，与编程语言有本质不同。
 - 顺序语句综合较为复杂，必须清楚所需电路结构否则容易出错
 
-进程
+### Process
 
 - variable非实际电路，即刻赋值，仅仅起辅助作用（对变量赋的初值只会在开始执行一次）
 - signals in process
@@ -287,7 +253,38 @@ begin
 end process;
 ```
 
-进程内部的顺序语句
+### Function & Procedure
+
+- 与Process的区别：主要用于构建Library，描述常用局部电路以实现代码重用
+- Function
+  - 输入：常量/信号
+  - 有且只能有一个可综合的信号返回值
+  - 不同输入输出类型的函数可重载
+- Procedure
+  - 可有多个输出
+
+```VHDL
+-- function declaration
+function function_name [(<parameter list>)] return <data_type>;
+-- function implement
+function function_name [(<parameter list>)] return <data_type> is
+  [declaration]
+begin
+  <statement>
+  return <expression>;
+end function_name;
+------------------------------
+-- procedure declaration
+procedure proc_name [(<parameter list>)];
+-- procedure implement
+procedure proc_name [(<parameter list>)] is
+  [declaration]
+begin
+  <statement>
+end proc_name;
+```
+
+### 顺序语句
 
 ```VHDL
 -- 1. wait
@@ -328,6 +325,86 @@ exit [when <condition>];
 next [when <condition>];
 ```
 
+## Define your own packages
+
+元件
+
+```VHDL
+--component.vhd
+library ieee;
+use ieee.std_logic_1164.all;
+--------------------------------
+entity comp_name is 
+  generic(...);-- 有generic时无法直接实例化（综合）这个元件
+  port(...);
+end component;
+--------------------------------
+architecture of comp_name is
+  begin
+    <statement>
+  end;
+```
+
+包
+
+```VHDL
+--my_package.vhd
+library ieee;
+use ieee.std_logic_1164.all;
+--------------------------------
+package package_name is
+
+  -- component declaration
+  component comp_name is 
+    generic(...);
+    port(...);
+  end component;
+  -- function declaration
+  -- procedure declaration
+  -- constant/signal declaration
+  -- subtype declaration
+  -- attribute declaration
+  -- alias declaration
+  -- file declaration
+end;
+--------------------------------
+package body package_name is
+
+  -- function
+  <function_implement>
+  -- procedure
+  <procedure_implement>
+
+end;
+```
+
+包的使用
+
+```VHDL
+--project.vhd
+library ieee;
+use ieee.std_logic_1164.all;
+
+library work;
+use work.my_package.all;
+-------------------------------
+entity my_project is
+  generic(...);
+  port(...);
+end;
+
+architecture of my_project is
+  begin
+    label: comp_name generic map(...) port map(...);
+  end;
+```
+
+- 端口映射
+  - 位置映射`port map(x, y)`
+  - 名称映射`port map(x => a, y => b)`
+- 类属映射
+  - `generic map(<para_list>)`
+
 ## FSM
 
 ```VHDL
@@ -347,7 +424,7 @@ begin
   -- switching state
   process(clk, reset)
   begin
-    if reset = '1' then
+    if reset = '1' then -- asynchronous reset
       state <= s0;
     elsif rising_edge(clk) then
       case state is
@@ -359,7 +436,7 @@ begin
     end if;
   end process;
   -- archi of each state
-  process(state)
+  process(state [, signal table])
   begin
     case state is
         when s0 => <statement>
