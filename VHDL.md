@@ -1,5 +1,7 @@
 # Very Hard Design Language
 
+[toc]
+
 ## Basis
 
 - 不区分大小写
@@ -188,6 +190,7 @@ b <= a;-- wrong
 
 - Numeric：`<lb> to <ub>`
 - Enumerated：`(ele1, ele2, ...)`
+- Array：`<lb> to <ub>`或`<ub> downto <lb>`
 
 ## Operator
 
@@ -226,13 +229,26 @@ CLK <= not CLK after 10ns;
 -- 5. transport after
 ```
 
+**Generate**：并行语句的批量描述方式
+
+```VHDL
+-- for generate/if generate可以相互嵌套
+for i in <range> generate
+  <statement(i)>
+end generate;
+------------------
+if <condition> generate
+  <statement>
+end generate;
+```
+
 ## Sequential Statements
 
 - 顺序语句常用于描述时序逻辑电路，非必要不写顺序语句
 - HDL的目的是描述电路，并无所谓“执行”的说法，与编程语言有本质不同。
 - 顺序语句综合较为复杂，必须清楚所需电路结构否则容易出错
 
-### Process
+**Process**：
 
 - variable非实际电路，即刻赋值，仅仅起辅助作用（对变量赋的初值只会在开始执行一次）
 - signals in process
@@ -253,7 +269,7 @@ begin
 end process;
 ```
 
-### Function & Procedure
+**Function & Procedure**：
 
 - 与Process的区别：主要用于构建Library，描述常用局部电路以实现代码重用
 - Function
@@ -284,7 +300,7 @@ begin
 end proc_name;
 ```
 
-### 顺序语句
+**顺序语句**：
 
 ```VHDL
 -- 1. wait
@@ -323,6 +339,23 @@ end loop;
 -- exit/next
 exit [when <condition>];
 next [when <condition>];
+```
+
+## Assert
+
+仿真Debug工具
+
+```VHDL
+-- <condition>不满足时打印信息
+assert <condition>
+  report "<message>"
+  severity <severity>; -- from std.standard.severity_level(default: error)
+-- example
+assert z = 0
+  report "z isn't 0!"
+  severity failure;
+-- print:
+-- Failure: z can't be 0!
 ```
 
 ## Define your own packages
@@ -404,6 +437,49 @@ architecture of my_project is
   - 名称映射`port map(x => a, y => b)`
 - 类属映射
   - `generic map(<para_list>)`
+
+**Configuration**：
+
+元件实体具有多种实现（即多个architecture）时，使用configuration指定
+
+```VHDL
+entity main is
+  port(...);
+end;
+----------------------------------
+architecture main_arch of main is
+begin
+  label1: comp1 port map(...);
+  label2: comp1 port map(...);
+  label3: comp1 port map(...);
+
+  label4: comp2 port map(...);
+  label5: comp2 port map(...);
+end
+----------------------------------
+configuration main_config of main is
+  for main_arch -- specific one of main's architectures
+
+    -- comp1 is a component entity with several architectures
+    for label1: comp1
+      use entity work.comp1(comp1_arch1);
+    end for;
+    for label2: comp1
+      use entity work.comp1(comp1_arch2);
+    end for;
+    for label3: comp1
+      use entity work.comp1(comp1_arch3);
+    end for;
+
+    for all: comp2
+      use configuration work.comp2_config
+    end for;
+
+  end for;
+end;
+```
+
+## File I/O
 
 ## FSM
 
