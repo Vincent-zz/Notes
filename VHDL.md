@@ -79,7 +79,8 @@ end;
 
 ```VHDL
 architecture <archi_name> of entity_name is
-  [declarations]
+  [data_obj_declarations]
+  [component_declarations]
   begin
       <statement>
   end;
@@ -224,9 +225,11 @@ with flag select
        C when others;
 -- 3. use package component
 -- 4. after（无法综合，仅用于仿真）
-F <= F0, F1 after 10ns, F2 after 20ns;-- 时延都是相对仿真开始时间而言的
-CLK <= not CLK after 10ns;
--- 5. transport after
+  -- 常量
+F <= '0', '1' after 10ns, '0' after 20ns; -- 时延都是相对仿真开始时间而言的
+  --信号
+F1 <= F2 after 10ns; -- 信号的惯性延迟（信号变化后10ns时读取该信号）
+F1 <= F2 transport after 10ns; -- 信号的传输延迟（信号变化时读取该信号并在10ns后赋值）
 ```
 
 **Generate**：并行语句的批量描述方式
@@ -370,12 +373,13 @@ use ieee.std_logic_1164.all;
 entity comp_name is 
   generic(...);-- 有generic时无法直接实例化（综合）这个元件
   port(...);
-end component;
+end;
 --------------------------------
 architecture of comp_name is
   begin
     <statement>
   end;
+-- *如果不建包，在architecture头部声明后也可以调用元件
 ```
 
 包
@@ -443,6 +447,12 @@ architecture of my_project is
 元件实体具有多种实现（即多个architecture）时，使用configuration指定
 
 ```VHDL
+library ieee;
+use ieee.std_logic_1164.all;
+
+library work;
+use work.my_package.all;
+----------------------------------
 entity main is
   port(...);
 end;
@@ -460,7 +470,7 @@ end
 configuration main_config of main is
   for main_arch -- specific one of main's architectures
 
-    -- comp1 is a component entity with several architectures
+    -- comp1, comp2 is component entities with several architectures
     for label1: comp1
       use entity work.comp1(comp1_arch1);
     end for;
@@ -472,7 +482,7 @@ configuration main_config of main is
     end for;
 
     for all: comp2
-      use configuration work.comp2_config
+      use configuration work.comp2_config -- it's like main_config
     end for;
 
   end for;
@@ -480,6 +490,24 @@ end;
 ```
 
 ## File I/O
+
+- 不能被综合
+- 只能声明在Process中
+
+```VHDL
+library ieee;
+use std.textio.all;
+---------------------------------------------------------
+variable line_var : line;
+file file_obj_name: text open read_mode is "<file_name>";
+file file_obj_name: text open write_mode is "<file_name>";
+---------------------------------------------------------
+readline(file_obj_name, line_var);
+read(line_var, data_obj);
+---------------------------------------------------------
+write(line_var, data_obj);
+writeline(file_obj_name, line_var);
+```
 
 ## FSM
 
@@ -524,18 +552,13 @@ begin
 end;
 ```
 
-## FPGA
+## TestBench
 
-Field Programmable Gate Array -- a reconfigurable semiconductor integrated circuit
-
-内部组成
-
-- Configurable Logic Blocks (the fundamental piece)
-  - Look Up Table：储存器，储存“真值表”，修改“真值表”即等效于设置组合逻辑
-  - Flip-Flop：实现时序逻辑
-- Interconnects：导线
-- IO Blocks
-- ...
+- synthesizable
+  - Device Under Test
+- non-synthesizable
+  - signal generator
+  - testbench
 
 ## By-Talk about EDA
 
