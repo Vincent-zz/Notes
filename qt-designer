@@ -1,0 +1,52 @@
+# Qt GUI Design
+
+based on **Qt Designer**
+
+## Layout
+
+- `Edit-Edit Widgets`进入Layout编辑模式
+- 使用`Containers-Widget`作为装载组件的父类（可层层嵌套，结构关系见右上`Objecct Inspector`），为其中的子类设置Layout格式
+- 子类的`QWidget-sizePolicy-Vertical/Horizonal Policy`属性一律采用`Expanding`（部分视情况采用`Fixed`），通过`Vertical/Horizonal Stretch`设置子类之间的大小比例
+
+## Style Sheet
+
+## Signals/Slots
+
+使用Qt Designer（**不推荐**）
+
+- `Edit-Edit Signals/Slots`进入signals/slots编辑模式
+- 拖动设置：$\text{signal} \rightarrow \text{slot}$（右下`Signal/Slot Editor`可见）
+
+自定义编写程序（**推荐：界面设计与业务逻辑解耦**）
+
+- 导出设计的GUI类，终端输入：
+```
+pyuic5 -o <Python Filename>.py <Qt Designer Filename>.ui
+```
+- python主文件中导入GUI类
+```python
+from <Python Filename> import Ui_MainWindow
+from PyQt5 import QtWidgets, QtCore
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QDialog
+import sys
+
+class UtilWindowUI(QMainWindow, Ui_MainWindow):
+    def __init__(self):
+        super(UtilWindowUI,self).__init__()
+        self.setupUi(self)
+
+if __name__=="__main__":
+    app=QtWidgets.QApplication(sys.argv)
+    widget=UtilWindowUI()
+    widget.show()
+    sys.exit(app.exec_())
+```
+- 在`__init__`函数中设置Signals/Slots
+```python
+self.<WidgetName>.<SignalName>.connect(self.<SlotName>)
+```
+- 自定义函数实现
+```python
+def <SlotName>(self):
+    <statements>
+```

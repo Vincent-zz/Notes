@@ -1,6 +1,10 @@
-# 操作系统 
+# 计算机
 
-## 概念 
+$$
+\text{用户} \stackrel{\text{操作系统}}{\rightarrow} \text{交互软件} \stackrel{\text{操作系统}}{\rightarrow}  \text{驱动软件} \stackrel{\text{操作系统}}{\rightarrow}  \text{CPU} \rightarrow \text{硬件}
+$$
+
+## 操作系统 
 
 Operating System: A body of software, in fact, that is responsible for *making it easy to run programs*(even allowing you to seemingly run many at the same time), alowing programs to share memory, enabling programs to interact with devices, and other fun stuff like that. 
 

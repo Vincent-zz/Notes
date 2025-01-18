@@ -19,6 +19,17 @@ True
 
 - 关于字符串变量`__name__`：运行时某个module时该module中`__name__ = '__main__'`，而在其`import`的其他module中`__name__ = '__对应的modele名__'`
 
+
+## 对比MATLAB
+
+使用`numpy`做矩阵处理
+
+||python|MATLAB|
+|:---:|:---:|:---:|
+|索引|`a[i]`，从0开始|`a(i)`，从1开始|
+|矩阵运算|`a*b`/`a.dot(b)`|`a.*b`/`a*b`|
+|一维数组|只有一个维度`L`|二维`(L, 1)`|
+
 ## 面向对象
 
 语法：
